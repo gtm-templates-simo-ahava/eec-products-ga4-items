@@ -1,0 +1,7 @@
+homepage: "https://www.simoahava.com/"
+documentation: "https://www.simoahava.com/custom-templates/eec-products-ga4-items/"
+versions:
+  # Latest version
+  - sha: cd91039cbd30ceb2b487f9d5cb89218c8bf579d0
+    changeNotes: Initial release.
+  # Older version
