@@ -11,8 +11,11 @@ ___INFO___
 {
   "type": "MACRO",
   "id": "cvt_temp_public_id",
-  "__wm": "VGVtcGxhdGUtQXV0aG9yX2VlYy1wcm9kdWN0cy1nYTQtaXRlbXMtU2ltby1BaGF2YQ==",
-  "categories": ["UTILITY", "TAG_MANAGEMENT"],
+  "__wm": "VGVtcGxhdGUtQXV0aG9yX2VlYy1wcm9kdWN0cy1nYTQtaXRlbXMtU2ltby1BaGF2YQ\u003d\u003d",
+  "categories": [
+    "UTILITY",
+    "TAG_MANAGEMENT"
+  ],
   "version": 1,
   "securityGroups": [],
   "displayName": "EEC Products -\u003e GA4 Items",
@@ -81,6 +84,79 @@ ___TEMPLATE_PARAMETERS___
     ],
     "simpleValueType": true,
     "help": "Choose \u003cstrong\u003eMap ecommerce object automatically\u003c/strong\u003e to map the most recently pushed \u003cstrong\u003eecommerce\u003c/strong\u003e object\u0027s item array into the format required by Google Analytics 4. Select another option to reference a specific type of array directly."
+  },
+  {
+    "type": "GROUP",
+    "name": "mapGroup",
+    "displayName": "Map Custom Definitions To Item Parameters",
+    "groupStyle": "ZIPPY_OPEN",
+    "subParams": [
+      {
+        "type": "LABEL",
+        "name": "customdeflabel",
+        "displayName": "If your Enhanced Ecommerce object contains product-scoped custom dimensions/metrics, you can use this table to map those into GA4 item parameter names. Input the index number of the custom definition in the first field, and the parameter name with which the value should be sent to GA4 in the second."
+      },
+      {
+        "type": "SIMPLE_TABLE",
+        "name": "customDims",
+        "simpleTableColumns": [
+          {
+            "defaultValue": "",
+            "displayName": "Custom Dimension Index",
+            "name": "cdindex",
+            "type": "TEXT",
+            "valueValidators": [
+              {
+                "type": "POSITIVE_NUMBER"
+              }
+            ],
+            "isUnique": true
+          },
+          {
+            "defaultValue": "",
+            "displayName": "Item Parameter Name",
+            "name": "cdparam",
+            "type": "TEXT",
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ]
+          }
+        ],
+        "newRowButtonText": "Add custom dimension map"
+      },
+      {
+        "type": "SIMPLE_TABLE",
+        "name": "customMets",
+        "simpleTableColumns": [
+          {
+            "defaultValue": "",
+            "displayName": "Custom Metric Index",
+            "name": "cmindex",
+            "type": "TEXT",
+            "valueValidators": [
+              {
+                "type": "POSITIVE_NUMBER"
+              }
+            ],
+            "isUnique": true
+          },
+          {
+            "defaultValue": "",
+            "displayName": "Item Parameter Name",
+            "name": "cmparam",
+            "type": "TEXT",
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ]
+          }
+        ],
+        "newRowButtonText": "Add custom metric map"
+      }
+    ]
   }
 ]
 
@@ -88,6 +164,11 @@ ___TEMPLATE_PARAMETERS___
 ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
 const copyFromDataLayer = require('copyFromDataLayer');
+const makeNumber = require('makeNumber');
+const makeTableMap = require('makeTableMap');
+
+const customDimMap = data.customDims ? makeTableMap(data.customDims, 'cdindex', 'cdparam') : {};
+const customMetMap = data.customMets ? makeTableMap(data.customMets, 'cmindex', 'cmparam') : {};
 
 const mapProductData = i => {
   const category = i.category ? i.category.split('/') : [];
@@ -104,7 +185,13 @@ const mapProductData = i => {
     else itemObj['item_category_' + (i + 1)] = c;
   });
   for (let prop in i) {
-    if (prop.indexOf('dimension') === 0 || prop.indexOf('metric') === 0) itemObj[prop] = i[prop];
+    if (prop.indexOf('dimension') === 0) {
+      let paramName = customDimMap[prop.split('dimension')[1]];
+      itemObj[paramName || prop] = i[prop];
+    } else if (prop.indexOf('metric') === 0) {
+      let paramName = customMetMap[prop.split('metric')[1]];
+      itemObj[paramName || prop] = makeNumber(i[prop]) || 0;
+    }
   }
   return itemObj;
 };
@@ -211,7 +298,6 @@ if (data.option === 'impressions') {
 if (data.option === 'promotions') {
   return data.promotionsVar.map(mapPromotionData);
 }
-
 
 
 ___WEB_PERMISSIONS___
@@ -328,7 +414,9 @@ setup: |-
       variant: 'v1',
       quantity: 1,
       dimension1: 'd1',
-      metric1: 'm1'
+      dimension17: 'd17',
+      metric1: '1',
+      metric17: '17'
     },{
       id: 'p2',
       name: 'n2',
@@ -337,7 +425,9 @@ setup: |-
       variant: 'v2',
       quantity: 2,
       dimension2: 'd2',
-      metric2: 'm2'
+      metric2: '2',
+      dimension18: 'd18',
+      metric18: '18'
     }],
     impressionsVar: [{
       id: 'impi1',
@@ -347,7 +437,9 @@ setup: |-
       variant: 'imv1',
       quantity: 1,
       dimension3: 'd3',
-      metric3: 'm3',
+      metric3: '3',
+      dimension19: 'd19',
+      metric19: '19',
       list: 'il1',
       position: 1
     },{
@@ -358,7 +450,9 @@ setup: |-
       variant: 'imv2',
       quantity: 2,
       dimension4: 'd4',
-      metric4: 'm4',
+      metric4: '4',
+      dimension20: 'd20',
+      metric20: '20',
       list: 'il1',
       position: 2
     }],
@@ -372,6 +466,32 @@ setup: |-
       name: 'promon2',
       creative: 'promoc2',
       position: 'slot2'
+    }],
+    customDims: [{
+      cdindex: '17',
+      cdparam: 'dim17'
+    },{
+      cdindex: '18',
+      cdparam: 'dim18'
+    },{
+      cdindex: '19',
+      cdparam: 'dim19'
+    },{
+      cdindex: '20',
+      cdparam: 'dim20'
+    }],
+    customMets: [{
+      cmindex: '17',
+      cmparam: 'met17'
+    },{
+      cmindex: '18',
+      cmparam: 'met18'
+    },{
+      cmindex: '19',
+      cmparam: 'met19'
+    },{
+      cmindex: '20',
+      cmparam: 'met20'
     }]
   };
 
@@ -384,7 +504,9 @@ setup: |-
       item_variant: 'v1',
       quantity: 1,
       dimension1: 'd1',
-      metric1: 'm1'
+      metric1: 1,
+      dim17: 'd17',
+      met17: 17
     },{
       item_id: 'p2',
       item_name: 'n2',
@@ -393,7 +515,9 @@ setup: |-
       item_variant: 'v2',
       quantity: 2,
       dimension2: 'd2',
-      metric2: 'm2'
+      metric2: 2,
+      dim18: 'd18',
+      met18: 18
     }],
     impressions: [{
       item_id: 'impi1',
@@ -403,7 +527,9 @@ setup: |-
       item_variant: 'imv1',
       quantity: 1,
       dimension3: 'd3',
-      metric3: 'm3',
+      metric3: 3,
+      dim19: 'd19',
+      met19: 19,
       item_list_name: 'il1',
       index: 1
     },{
@@ -414,7 +540,9 @@ setup: |-
       item_variant: 'imv2',
       quantity: 2,
       dimension4: 'd4',
-      metric4: 'm4',
+      metric4: 4,
+      dim20: 'd20',
+      met20: 20,
       item_list_name: 'il1',
       index: 2
     }],
