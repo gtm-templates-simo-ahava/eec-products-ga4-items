@@ -2,6 +2,8 @@ homepage: "https://www.simoahava.com/"
 documentation: "https://www.simoahava.com/custom-templates/eec-products-ga4-items/"
 versions:
   # Latest version
+  - sha: bfb483cc52913051b12adc1711b01dbab5f44e02
+    changeNotes: Added table for mapping custom dimensions and metrics.
+  # Older versions
   - sha: cd91039cbd30ceb2b487f9d5cb89218c8bf579d0
     changeNotes: Initial release.
-  # Older version
