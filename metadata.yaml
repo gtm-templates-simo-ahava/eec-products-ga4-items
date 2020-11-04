@@ -2,7 +2,7 @@ homepage: "https://www.simoahava.com/"
 documentation: "https://www.simoahava.com/custom-templates/eec-products-ga4-items/"
 versions:
   # Latest version
-  - sha: 1518463e5f643b058532753bad52d94f1a218df0
+  - sha: 668a7ca84c61fc128f20c824aeda0a019ec683eb
     changeNotes: Prevent error if no ecommerce object found.
   # Older versions
   - sha: bfb483cc52913051b12adc1711b01dbab5f44e02
