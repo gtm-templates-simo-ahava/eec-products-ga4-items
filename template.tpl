@@ -166,6 +166,7 @@ ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 const copyFromDataLayer = require('copyFromDataLayer');
 const makeNumber = require('makeNumber');
 const makeTableMap = require('makeTableMap');
+const math = require('Math');
 
 const customDimMap = data.customDims ? makeTableMap(data.customDims, 'cdindex', 'cdparam') : {};
 const customMetMap = data.customMets ? makeTableMap(data.customMets, 'cmindex', 'cmparam') : {};
@@ -178,7 +179,7 @@ const mapProductData = i => {
     price: i.price,
     item_brand: i.brand,
     item_variant: i.variant,
-    quantity: i.quantity
+    quantity: math.round(i.quantity)
   };
   category.forEach((c, i) => {
     if (i === 0) itemObj.item_category = c;
@@ -423,7 +424,7 @@ setup: |-
       price: 11.00,
       brand: 'b2',
       variant: 'v2',
-      quantity: 2,
+      quantity: '2.00',
       dimension2: 'd2',
       metric2: '2',
       dimension18: 'd18',
