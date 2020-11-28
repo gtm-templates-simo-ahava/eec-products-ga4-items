@@ -183,7 +183,7 @@ const mapProductData = i => {
   };
   category.forEach((c, i) => {
     if (i === 0) itemObj.item_category = c;
-    else itemObj['item_category_' + (i + 1)] = c;
+    else itemObj['item_category' + (i + 1)] = c;
   });
   for (let prop in i) {
     if (prop.indexOf('dimension') === 0) {
