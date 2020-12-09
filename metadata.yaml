@@ -2,9 +2,11 @@ homepage: "https://www.simoahava.com/"
 documentation: "https://www.simoahava.com/custom-templates/eec-products-ga4-items/"
 versions:
   # Latest version
+  - sha: 3191e6c026ff335b93341ba87193a5327cd462c8
+    changeNotes: Fix item quantity to not send NaN if source is not a number.
+  # Older versions
   - sha: 3e2f03f614a6e5201b532792c8a9189a5cb2f8af
     changeNotes: Fixed item_categoryN to not have the second underscore.
-  # Older versions
   - sha: 39bf2e664c9e3bdc1feeb66f53549a6972d6e070
     changeNotes: Convert quantity to integer to prevent breakage.
   - sha: 668a7ca84c61fc128f20c824aeda0a019ec683eb
