@@ -179,7 +179,7 @@ const mapProductData = i => {
     price: i.price,
     item_brand: i.brand,
     item_variant: i.variant,
-    quantity: math.round(i.quantity)
+    quantity: i.quantity ? math.round(i.quantity) : i.quantity
   };
   category.forEach((c, i) => {
     if (i === 0) itemObj.item_category = c;
