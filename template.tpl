@@ -94,7 +94,7 @@ ___TEMPLATE_PARAMETERS___
       {
         "type": "LABEL",
         "name": "customdeflabel",
-        "displayName": "If your Enhanced Ecommerce object contains product-scoped custom dimensions/metrics, you can use this table to map those into GA4 item parameter names. Input the index number of the custom definition in the first field, and the parameter name with which the value should be sent to GA4 in the second."
+        "displayName": "If your Enhanced Ecommerce object contains product-scoped custom dimensions/metrics, you can use this table to map those into GA4 item parameter names. Input the index number (if using the prescribed \u003cstrong\u003edimensionXX\u003c/strong\u003e and \u003cstrong\u003emetricXX\u003c/strong\u003e syntax), or the name of the custom property (e.g. \u003cstrong\u003eproductSize\u003c/strong\u003e or \u003cstrong\u003estockCount\u003c/strong\u003e) in the first field. Input the parameter name with which the value should be sent to GA4 in the second."
       },
       {
         "type": "SIMPLE_TABLE",
@@ -102,12 +102,12 @@ ___TEMPLATE_PARAMETERS___
         "simpleTableColumns": [
           {
             "defaultValue": "",
-            "displayName": "Custom Dimension Index",
+            "displayName": "Custom Dimension Index Or Parameter Name",
             "name": "cdindex",
             "type": "TEXT",
             "valueValidators": [
               {
-                "type": "POSITIVE_NUMBER"
+                "type": "NON_EMPTY"
               }
             ],
             "isUnique": true
@@ -132,12 +132,12 @@ ___TEMPLATE_PARAMETERS___
         "simpleTableColumns": [
           {
             "defaultValue": "",
-            "displayName": "Custom Metric Index",
+            "displayName": "Custom Metric Index Or Parameter Name",
             "name": "cmindex",
             "type": "TEXT",
             "valueValidators": [
               {
-                "type": "POSITIVE_NUMBER"
+                "type": "NON_EMPTY"
               }
             ],
             "isUnique": true
@@ -186,10 +186,13 @@ const mapProductData = i => {
     else itemObj['item_category' + (i + 1)] = c;
   });
   for (let prop in i) {
+    if (customDimMap[prop]) { itemObj[customDimMap[prop]] = i[prop]; }
+    if (customMetMap[prop]) { itemObj[customMetMap[prop]] = i[prop]; }
     if (prop.indexOf('dimension') === 0) {
       let paramName = customDimMap[prop.split('dimension')[1]];
       itemObj[paramName || prop] = i[prop];
-    } else if (prop.indexOf('metric') === 0) {
+    }
+    if (prop.indexOf('metric') === 0) {
       let paramName = customMetMap[prop.split('metric')[1]];
       itemObj[paramName || prop] = makeNumber(i[prop]) || 0;
     }
@@ -441,6 +444,8 @@ setup: |-
       metric3: '3',
       dimension19: 'd19',
       metric19: '19',
+      testDim: 'testDimValue',
+      testMet: 'testMetValue',
       list: 'il1',
       position: 1
     },{
@@ -468,7 +473,11 @@ setup: |-
       creative: 'promoc2',
       position: 'slot2'
     }],
-    customDims: [{
+    customDims: [
+    {
+      cdindex: 'testDim',
+      cdparam: 'test_dim'
+    },{
       cdindex: '17',
       cdparam: 'dim17'
     },{
@@ -482,6 +491,9 @@ setup: |-
       cdparam: 'dim20'
     }],
     customMets: [{
+      cmindex: 'testMet',
+      cmparam: 'test_met'
+    },{
       cmindex: '17',
       cmparam: 'met17'
     },{
@@ -531,6 +543,8 @@ setup: |-
       metric3: 3,
       dim19: 'd19',
       met19: 19,
+      test_dim: 'testDimValue',
+      test_met: 'testMetValue',
       item_list_name: 'il1',
       index: 1
     },{
