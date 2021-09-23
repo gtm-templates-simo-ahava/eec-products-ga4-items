@@ -164,6 +164,7 @@ ___TEMPLATE_PARAMETERS___
 ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
 const copyFromDataLayer = require('copyFromDataLayer');
+const getType = require('getType');
 const makeNumber = require('makeNumber');
 const makeTableMap = require('makeTableMap');
 const math = require('Math');
@@ -219,7 +220,7 @@ const mapPromotionData = i => {
 if (data.option === 'auto') {
   const eec = copyFromDataLayer('ecommerce', 1) || {};
 
-  if (eec.hasOwnProperty('click')) {
+  if (eec.hasOwnProperty('click') && getType(eec.click.products) === 'array') {
     return eec.click.products.map(i => {
       const product = mapProductData(i);
       product.item_list_name = eec.click.actionField ? eec.click.actionField.list : undefined;
@@ -228,7 +229,7 @@ if (data.option === 'auto') {
     });
   }
 
-  if (eec.hasOwnProperty('detail')) {
+  if (eec.hasOwnProperty('detail') && getType(eec.detail.products) === 'array') {
     return eec.detail.products.map(i => {
       const product = mapProductData(i);
       product.item_list_name = eec.detail.actionField ? eec.detail.actionField.list : undefined;
@@ -236,7 +237,7 @@ if (data.option === 'auto') {
     });
   }
 
-  if (eec.hasOwnProperty('add')) {
+  if (eec.hasOwnProperty('add') && getType(eec.add.products) === 'array') {
     return eec.add.products.map(i => {
       const product = mapProductData(i);
       product.item_list_name = eec.add.actionField ? eec.add.actionField.list : undefined;
@@ -244,7 +245,7 @@ if (data.option === 'auto') {
     });
   }
 
-  if (eec.hasOwnProperty('remove')) {
+  if (eec.hasOwnProperty('remove') && getType(eec.remove.products) === 'array') {
     return eec.remove.products.map(i => {
       const product = mapProductData(i);
       product.item_list_name = eec.remove.actionField ? eec.remove.actionField.list : undefined;
@@ -252,7 +253,7 @@ if (data.option === 'auto') {
     });
   }
 
-  if (eec.hasOwnProperty('checkout')) {
+  if (eec.hasOwnProperty('checkout') && getType(eec.checkout.products) === 'array') {
     return eec.checkout.products.map(i => {
       const product = mapProductData(i);
       product.item_list_name = eec.checkout.actionField ? eec.checkout.actionField.list : undefined;
@@ -260,7 +261,7 @@ if (data.option === 'auto') {
     });
   }
 
-  if (eec.hasOwnProperty('purchase')) {
+  if (eec.hasOwnProperty('purchase') && getType(eec.purchase.products) === 'array') {
     return eec.purchase.products.map(i => {
       const product = mapProductData(i);
       product.item_list_name = eec.purchase.actionField ? eec.purchase.actionField.list : undefined;
@@ -268,7 +269,7 @@ if (data.option === 'auto') {
     });
   }
 
-  if (eec.hasOwnProperty('refund')) {
+  if (eec.hasOwnProperty('refund') && getType(eec.refund.products) === 'array') {
     return eec.refund.products.map(i => {
       const product = mapProductData(i);
       product.item_list_name = eec.refund.actionField ? eec.refund.actionField.list : undefined;
@@ -276,26 +277,26 @@ if (data.option === 'auto') {
     });
   }
 
-  if (eec.hasOwnProperty('impressions')) {
+  if (eec.hasOwnProperty('impressions') && getType(eec.impressions) === 'array') {
     return eec.impressions.map(mapImpressionData);
   }
 
-  if (eec.hasOwnProperty('promoView')) {
+  if (eec.hasOwnProperty('promoView') && getType(eec.promoView.promotions) === 'array') {
     return eec.promoView.promotions.map(mapPromotionData);
   }
 
-  if (eec.hasOwnProperty('promoClick')) {
+  if (eec.hasOwnProperty('promoClick') && getType(eec.promoClick.promotions) === 'array') {
     return eec.promoClick.promotions.map(mapPromotionData);
   }
 
   return [];
 }
 
-if (data.option === 'products') {
+if (data.option === 'products' && getType(data.productsVar) === 'array') {
   return data.productsVar.map(mapProductData);
 }
 
-if (data.option === 'impressions') {
+if (data.option === 'impressions' && getType(data.impressionsVar) === 'array') {
   return data.impressionsVar.map(mapImpressionData);
 }
 
