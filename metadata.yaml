@@ -2,9 +2,11 @@ homepage: "https://www.simoahava.com/"
 documentation: "https://www.simoahava.com/custom-templates/eec-products-ga4-items/"
 versions:
   # Latest version
+  - sha: bee1adc4bd1cdadcc0828f5ed9625a10595fdce4
+    changeNotes: Refactored code to be more error-resilient.
+  # Older versions
   - sha: 1afcd3abb79b36934d727ea99f054cfb06d292d5
     changeNotes: You can now type custom parameter names for the custom dimensions and metrics instead of using the index numbers.
-  # Older versions
   - sha: 3191e6c026ff335b93341ba87193a5327cd462c8
     changeNotes: Fix item quantity to not send NaN if source is not a number.
   - sha: 3e2f03f614a6e5201b532792c8a9189a5cb2f8af
